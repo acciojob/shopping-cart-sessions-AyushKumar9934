@@ -140,31 +140,29 @@ let allprodtoBuyid=[];
 const renderlist=document.getElementById("cart-list");
 function renderCart() {
   renderlist.innerHTML="";
-  allprodtoBuyid.forEach((productid)=>{
-    let producttobeadd=products.filter((element)=>{ return element.id==productid;})
+  allprodtoBuyid.forEach((product)=>{
     const li=document.createElement("li");
-    li.innerHTML=`${producttobeadd[0].name} - $${producttobeadd[0].price} <button onclick="removeFromCart(${producttobeadd[0].id})" class="add-to-cart-btn" data-id="${producttobeadd[0].id}">Remove From Cart</button>`
+    li.innerHTML=`${product.name} - $${product.price} <button onclick="removeFromCart(${product.id})" class="add-to-cart-btn" data-id="${product.id}">Remove From Cart</button>`
     renderlist.appendChild(li);
   })
 }
 
 // Add item to cart
 function addToCart(productId) {
-  allprodtoBuyid.push(productId);
-  sessionStorage.setItem("cart", JSON.stringify(allprodtoBuyid)); // changed "sessionprod" to "cart"
+  let productToAdd = products.find(product => product.id === productId);
+  allprodtoBuyid.push(productToAdd);
+  sessionStorage.setItem("cart", JSON.stringify(allprodtoBuyid));
   renderCart();
 }
 
 // Remove item from cart
 function removeFromCart(productId) {
   console.log("we are inside the removeFromCart with id",productId);
-  let allcartprod=JSON.parse(sessionStorage.getItem("cart")); // changed "sessionprod" to "cart"
+  let allcartprod=JSON.parse(sessionStorage.getItem("cart"));
   
-  allcartprod=allcartprod.filter((element)=>{
-    return element!=productId;
-  })
+  allcartprod=allcartprod.filter((product) => product.id !== productId);
   
-  sessionStorage.setItem("cart", JSON.stringify(allcartprod)); // changed "sessionprod" to "cart"
+  sessionStorage.setItem("cart", JSON.stringify(allcartprod));
   allprodtoBuyid=allcartprod;
   
   renderCart();
@@ -182,16 +180,8 @@ document.getElementById("clear-cart-btn").addEventListener("click", clearCart);
 renderProducts();
 
 // Check if there are any saved items in sessionStorage
-if (sessionStorage.getItem("cart")) { // changed "sessionprod" to "cart"
-  allprodtoBuyid = JSON.parse(sessionStorage.getItem("cart")); // changed "sessionprod" to "cart"
+if (sessionStorage.getItem("cart")) {
+  allprodtoBuyid = JSON.parse(sessionStorage.getItem("cart"));
 }
 
 renderCart();
-
-
-
-
-
-
-
-
